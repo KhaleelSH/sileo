@@ -67,16 +67,16 @@ class _HomePage extends StatelessWidget {
                   'Sileo',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'An opinionated, physics-based toast for Flutter.',
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 32),
                 _Section(
@@ -154,86 +154,86 @@ class _HomePage extends StatelessWidget {
   }
 
   void _success() => sileo.success(
-        const SileoOptions(
-          title: 'Changes Saved',
-          description:
-              'Changes saved successfully to the database. Please refresh the page to see the changes.',
-        ),
-      );
+    const SileoOptions(
+      title: 'Changes Saved',
+      description:
+          'Changes saved successfully to the database. Please refresh the page to see the changes.',
+    ),
+  );
 
   void _error() => sileo.error(
-        const SileoOptions(
-          title: 'Something Went Wrong',
-          description:
-              'We\'re having trouble saving your changes to the server. Please try again in a few minutes.',
-        ),
-      );
+    const SileoOptions(
+      title: 'Something Went Wrong',
+      description:
+          'We\'re having trouble saving your changes to the server. Please try again in a few minutes.',
+    ),
+  );
 
   void _warning() => sileo.warning(
-        const SileoOptions(
-          title: 'Storage Almost Full',
-          description:
-              'You\'ve used 95% of your available storage. Please upgrade your plan to continue.',
-        ),
-      );
+    const SileoOptions(
+      title: 'Storage Almost Full',
+      description:
+          'You\'ve used 95% of your available storage. Please upgrade your plan to continue.',
+    ),
+  );
 
   void _info() => sileo.info(
-        const SileoOptions(
-          title: 'New Update Available',
-          description:
-              'Version 2.0 is now available. Please update your app to continue using the latest features.',
-        ),
-      );
+    const SileoOptions(
+      title: 'New Update Available',
+      description:
+          'Version 2.0 is now available. Please update your app to continue using the latest features.',
+    ),
+  );
 
   void _action() => sileo.action(
-        SileoOptions(
-          title: 'File Uploaded',
-          description: 'Your file has been uploaded. Share it with your team?',
-          button: SileoButton(
-            title: 'Share Now',
-            onPressed: () =>
-                sileo.success(const SileoOptions(title: 'Link Copied')),
-          ),
-        ),
-      );
+    SileoOptions(
+      title: 'File Uploaded',
+      description: 'Your file has been uploaded. Share it with your team?',
+      button: SileoButton(
+        title: 'Share Now',
+        onPressed: () =>
+            sileo.success(const SileoOptions(title: 'Link Copied')),
+      ),
+    ),
+  );
 
   void _pill() => sileo.success(const SileoOptions(title: 'Copied'));
 
   void _futureOK() => sileo.future<String>(
-        Future<String>.delayed(const Duration(seconds: 2), () => 'v2.1.0'),
-        SileoFutureOptions<String>(
-          loading: const SileoOptions(title: 'Deploying'),
-          success: (v) => SileoOptions(
-            title: 'Deployed',
-            description: 'Your site is live at $v.',
-          ),
-          error: (e) => SileoOptions(title: 'Failed', description: '$e'),
-        ),
-      );
+    Future<String>.delayed(const Duration(seconds: 2), () => 'v2.1.0'),
+    SileoFutureOptions<String>(
+      loading: const SileoOptions(title: 'Deploying'),
+      success: (v) => SileoOptions(
+        title: 'Deployed',
+        description: 'Your site is live at $v.',
+      ),
+      error: (e) => SileoOptions(title: 'Failed', description: '$e'),
+    ),
+  );
 
   void _futureFail() => sileo.future<void>(
-        Future<void>.delayed(
-          const Duration(seconds: 2),
-          () => throw Exception('network timeout'),
-        ),
-        SileoFutureOptions<void>(
-          loading: const SileoOptions(title: 'Uploading'),
-          success: (_) => const SileoOptions(title: 'Uploaded'),
-          error: (e) => const SileoOptions(
-            title: 'Upload failed',
-            description: 'Check your connection and try again.',
-          ),
-        ),
-      );
+    Future<void>.delayed(
+      const Duration(seconds: 2),
+      () => throw Exception('network timeout'),
+    ),
+    SileoFutureOptions<void>(
+      loading: const SileoOptions(title: 'Uploading'),
+      success: (_) => const SileoOptions(title: 'Uploaded'),
+      error: (e) => const SileoOptions(
+        title: 'Upload failed',
+        description: 'Check your connection and try again.',
+      ),
+    ),
+  );
 
   static String _positionLabel(SileoPosition p) => switch (p) {
-        SileoPosition.topLeft => 'Top Left',
-        SileoPosition.topCenter => 'Top Center',
-        SileoPosition.topRight => 'Top Right',
-        SileoPosition.bottomLeft => 'Bottom Left',
-        SileoPosition.bottomCenter => 'Bottom Center',
-        SileoPosition.bottomRight => 'Bottom Right',
-      };
+    SileoPosition.topLeft => 'Top Left',
+    SileoPosition.topCenter => 'Top Center',
+    SileoPosition.topRight => 'Top Right',
+    SileoPosition.bottomLeft => 'Bottom Left',
+    SileoPosition.bottomCenter => 'Bottom Center',
+    SileoPosition.bottomRight => 'Bottom Right',
+  };
 }
 
 class _Section extends StatelessWidget {
@@ -250,9 +250,9 @@ class _Section extends StatelessWidget {
         Text(
           title.toUpperCase(),
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                letterSpacing: 1.2,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            letterSpacing: 1.2,
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 10),
         child,

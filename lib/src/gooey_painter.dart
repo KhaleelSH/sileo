@@ -55,7 +55,9 @@ class SileoGooeyPainter extends CustomPainter {
     // No meaningful blur (roundness ~0): draw the rects directly, crisp.
     if (blur < 0.5) {
       canvas.drawRRect(RRect.fromRectAndRadius(pill, r), fillPaint);
-      if (hasBody) canvas.drawRRect(RRect.fromRectAndRadius(body, r), fillPaint);
+      if (hasBody) {
+        canvas.drawRRect(RRect.fromRectAndRadius(body, r), fillPaint);
+      }
       return;
     }
 

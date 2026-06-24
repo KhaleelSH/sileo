@@ -35,10 +35,12 @@ void main() {
     await tester.pumpWidget(
       _harness(position: SileoPosition.topCenter, theme: SileoTheme.light),
     );
-    sileo.success(const SileoOptions(
-      title: 'Saved',
-      description: 'Your changes are live and synced across all devices.',
-    ));
+    sileo.success(
+      const SileoOptions(
+        title: 'Saved',
+        description: 'Your changes are live and synced across all devices.',
+      ),
+    );
     await _settle(tester);
 
     await expectLater(
@@ -47,8 +49,9 @@ void main() {
     );
   });
 
-  testWidgets('golden: expanded with action button (dark theme)',
-      (tester) async {
+  testWidgets('golden: expanded with action button (dark theme)', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(900, 600);
     tester.view.devicePixelRatio = 2.0;
     addTearDown(tester.view.reset);
@@ -61,11 +64,13 @@ void main() {
         background: const Color(0xFF0B0B0B),
       ),
     );
-    sileo.action(SileoOptions(
-      title: 'Update available',
-      description: 'A new version is ready to install.',
-      button: SileoButton(title: 'Restart', onPressed: () {}),
-    ));
+    sileo.action(
+      SileoOptions(
+        title: 'Update available',
+        description: 'A new version is ready to install.',
+        button: SileoButton(title: 'Restart', onPressed: () {}),
+      ),
+    );
     await _settle(tester);
 
     await expectLater(
@@ -88,12 +93,14 @@ void main() {
     sileo.warning(const SileoOptions(id: '3', title: 'Warning'));
     sileo.info(const SileoOptions(id: '4', title: 'Info'));
     sileo.action(const SileoOptions(id: '5', title: 'Action'));
-    sileo.show(const SileoOptions(
-      id: '6',
-      title: 'Loading',
-      type: SileoState.loading,
-      duration: null,
-    ));
+    sileo.show(
+      const SileoOptions(
+        id: '6',
+        title: 'Loading',
+        type: SileoState.loading,
+        duration: null,
+      ),
+    );
     await _settle(tester);
 
     await expectLater(

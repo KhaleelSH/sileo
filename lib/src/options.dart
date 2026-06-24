@@ -15,8 +15,7 @@ enum SileoPosition {
   bottomRight;
 
   /// True for the three `top*` positions.
-  bool get isTop =>
-      this == topLeft || this == topCenter || this == topRight;
+  bool get isTop => this == topLeft || this == topCenter || this == topRight;
 
   /// True for the three `bottom*` positions.
   bool get isBottom => !isTop;
@@ -69,8 +68,7 @@ class SileoStyles {
     if (other == null) return this;
     return SileoStyles(
       title: title?.merge(other.title) ?? other.title,
-      description:
-          description?.merge(other.description) ?? other.description,
+      description: description?.merge(other.description) ?? other.description,
       badgeColor: other.badgeColor ?? badgeColor,
       buttonColor: other.buttonColor ?? buttonColor,
     );
@@ -95,9 +93,9 @@ class SileoAutopilot {
   const SileoAutopilot({this.expand, this.collapse}) : enabled = true;
 
   const SileoAutopilot.disabled()
-      : enabled = false,
-        expand = null,
-        collapse = null;
+    : enabled = false,
+      expand = null,
+      collapse = null;
 
   final bool enabled;
 

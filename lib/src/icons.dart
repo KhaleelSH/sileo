@@ -10,7 +10,11 @@ import 'options.dart';
 
 /// Returns the default badge icon for [state] at [color]. The `loading` state
 /// returns a spinning loader.
-Widget sileoStateIcon(SileoState state, {required Color color, double size = 16}) {
+Widget sileoStateIcon(
+  SileoState state, {
+  required Color color,
+  double size = 16,
+}) {
   if (state == SileoState.loading) {
     return _SileoSpinner(color: color, size: size);
   }
@@ -64,10 +68,21 @@ class _IconPainter extends CustomPainter {
         canvas.drawCircle(const Offset(12, 12), 10, p);
         canvas.drawCircle(const Offset(12, 12), 4, p);
         canvas.drawLine(const Offset(4.93, 4.93), const Offset(9.17, 9.17), p);
-        canvas.drawLine(const Offset(14.83, 9.17), const Offset(19.07, 4.93), p);
         canvas.drawLine(
-            const Offset(14.83, 14.83), const Offset(19.07, 19.07), p);
-        canvas.drawLine(const Offset(9.17, 14.83), const Offset(4.93, 19.07), p);
+          const Offset(14.83, 9.17),
+          const Offset(19.07, 4.93),
+          p,
+        );
+        canvas.drawLine(
+          const Offset(14.83, 14.83),
+          const Offset(19.07, 19.07),
+          p,
+        );
+        canvas.drawLine(
+          const Offset(9.17, 14.83),
+          const Offset(4.93, 19.07),
+          p,
+        );
       case SileoState.action:
         // M5 12h14 / m12 5 7 7-7 7
         canvas.drawLine(const Offset(5, 12), const Offset(19, 12), p);

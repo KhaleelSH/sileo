@@ -70,8 +70,9 @@ void main() {
     expect(find.text('Bravo'), findsOneWidget);
   });
 
-  testWidgets('a new toast uses the changed position; the existing one stays',
-      (tester) async {
+  testWidgets('a new toast uses the changed position; the existing one stays', (
+    tester,
+  ) async {
     final position = ValueNotifier<SileoPosition>(SileoPosition.topCenter);
     addTearDown(position.dispose);
 
@@ -113,7 +114,9 @@ void main() {
     await tester.pump(const Duration(milliseconds: 700));
   });
 
-  testWidgets('rapid reposition keeps the newest toast visible', (tester) async {
+  testWidgets('rapid reposition keeps the newest toast visible', (
+    tester,
+  ) async {
     final position = ValueNotifier<SileoPosition>(SileoPosition.topLeft);
     addTearDown(position.dispose);
 

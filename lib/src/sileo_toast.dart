@@ -73,37 +73,53 @@ class SileoToast extends StatefulWidget {
   State<SileoToast> createState() => _SileoToastState();
 }
 
-class _SileoToastState extends State<SileoToast>
-    with TickerProviderStateMixin {
+class _SileoToastState extends State<SileoToast> with TickerProviderStateMixin {
   // Spring-driven morph geometry.
-  late final AnimationController _pillWidth =
-      AnimationController.unbounded(vsync: this);
-  late final AnimationController _bodyHeight =
-      AnimationController.unbounded(vsync: this);
-  late final AnimationController _bodyOpacity =
-      AnimationController.unbounded(vsync: this);
+  late final AnimationController _pillWidth = AnimationController.unbounded(
+    vsync: this,
+  );
+  late final AnimationController _bodyHeight = AnimationController.unbounded(
+    vsync: this,
+  );
+  late final AnimationController _bodyOpacity = AnimationController.unbounded(
+    vsync: this,
+  );
+
   // Pill neck-cover height bump when open — its own (bouncy) spring.
-  late final AnimationController _pillBump =
-      AnimationController.unbounded(vsync: this);
+  late final AnimationController _pillBump = AnimationController.unbounded(
+    vsync: this,
+  );
 
   // Entry/exit timing on the spring-easing curve.
-  late final AnimationController _entry =
-      AnimationController(vsync: this, duration: kSileoEntryDuration);
-  late final CurvedAnimation _entryCurve =
-      CurvedAnimation(parent: _entry, curve: sileoSpringCurve);
+  late final AnimationController _entry = AnimationController(
+    vsync: this,
+    duration: kSileoEntryDuration,
+  );
+  late final CurvedAnimation _entryCurve = CurvedAnimation(
+    parent: _entry,
+    curve: sileoSpringCurve,
+  );
 
   // Header cross-fade: the incoming title/icon blurs in on the spring curve; the
   // outgoing (prev) layer blurs out on ease, then is dropped. The prev layer is
   // overlaid (never laid out), so a swap never resizes the header — keeping the
   // tuck-scale pivot and the title position stable.
-  late final AnimationController _headerEnter =
-      AnimationController(vsync: this, duration: kSileoDuration);
-  late final AnimationController _headerExit =
-      AnimationController(vsync: this, duration: kSileoHeaderExit);
-  late final CurvedAnimation _headerEnterCurve =
-      CurvedAnimation(parent: _headerEnter, curve: sileoSpringCurve);
-  late final CurvedAnimation _headerExitCurve =
-      CurvedAnimation(parent: _headerExit, curve: Curves.ease);
+  late final AnimationController _headerEnter = AnimationController(
+    vsync: this,
+    duration: kSileoDuration,
+  );
+  late final AnimationController _headerExit = AnimationController(
+    vsync: this,
+    duration: kSileoHeaderExit,
+  );
+  late final CurvedAnimation _headerEnterCurve = CurvedAnimation(
+    parent: _headerEnter,
+    curve: sileoSpringCurve,
+  );
+  late final CurvedAnimation _headerExitCurve = CurvedAnimation(
+    parent: _headerExit,
+    curve: Curves.ease,
+  );
   Widget? _prevHeaderInner;
   String? _headerKey;
   Timer? _headerExitTimer;
@@ -135,9 +151,13 @@ class _SileoToastState extends State<SileoToast>
   TextDirection _textDirection = TextDirection.ltr;
 
   bool get _hasDesc => _vDescription != null || _vButton != null;
+
   bool get _isLoading => _vState == SileoState.loading;
+
   bool get _open => _hasDesc && _isExpanded && !_isLoading;
+
   bool get _allowExpand => !_isLoading && widget.canExpand;
+
   double get _blur => widget.roundness * kSileoBlurRatio;
 
   @override
@@ -309,7 +329,11 @@ class _SileoToastState extends State<SileoToast>
 
   /* ------------------------------- Springs ------------------------------- */
 
-  void _spring(AnimationController c, double target, {SpringDescription? with_}) {
+  void _spring(
+    AnimationController c,
+    double target, {
+    SpringDescription? with_,
+  }) {
     if (_reduceMotion) {
       c
         ..stop()
@@ -379,11 +403,11 @@ class _SileoToastState extends State<SileoToast>
       .join(' ');
 
   TextStyle _titleStyle() => TextStyle(
-        fontSize: 13.2,
-        height: 16 / 13.2,
-        fontWeight: FontWeight.w500,
-        color: sileoToneColor(_vState),
-      ).merge(_vStyles?.title);
+    fontSize: 13.2,
+    height: 16 / 13.2,
+    fontWeight: FontWeight.w500,
+    color: sileoToneColor(_vState),
+  ).merge(_vStyles?.title);
 
   String _headerKeyString() => '${_vState.name}-${_resolvedTitle()}';
 
@@ -489,53 +513,53 @@ class _SileoToastState extends State<SileoToast>
         color: Color(0xFF000000),
       ),
       child: Semantics(
-      container: true,
-      liveRegion: true,
-      label: _semanticsLabel(),
-      child: MouseRegion(
-      onEnter: (_) {
-        if (widget.exiting) return;
-        widget.onMouseEnter?.call();
-        if (_hasDesc) _setExpanded(true);
-      },
-      onExit: (_) {
-        if (widget.exiting) return;
-        widget.onMouseLeave?.call();
-        _setExpanded(false);
-      },
-      child: GestureDetector(
-        behavior: HitTestBehavior.deferToChild,
-        onVerticalDragUpdate: canSwipe
-            ? (d) {
-                _dragRaw += d.delta.dy;
-                setState(() {
-                  _dragShown =
-                      _dragRaw.clamp(-kSileoSwipeMax, kSileoSwipeMax);
-                });
-              }
-            : null,
-        onVerticalDragEnd: canSwipe
-            ? (_) {
-                final dismiss = _dragRaw.abs() > kSileoSwipeDismiss;
-                _dragRaw = 0;
-                setState(() => _dragShown = 0);
-                if (dismiss) widget.onDismiss?.call();
-              }
-            : null,
-        child: AnimatedBuilder(
-          animation: Listenable.merge(
-            <Listenable>[
-              _pillWidth,
-              _bodyHeight,
-              _bodyOpacity,
-              _pillBump,
-              _entryCurve,
-            ],
+        container: true,
+        liveRegion: true,
+        label: _semanticsLabel(),
+        child: MouseRegion(
+          onEnter: (_) {
+            if (widget.exiting) return;
+            widget.onMouseEnter?.call();
+            if (_hasDesc) _setExpanded(true);
+          },
+          onExit: (_) {
+            if (widget.exiting) return;
+            widget.onMouseLeave?.call();
+            _setExpanded(false);
+          },
+          child: GestureDetector(
+            behavior: HitTestBehavior.deferToChild,
+            onVerticalDragUpdate: canSwipe
+                ? (d) {
+                    _dragRaw += d.delta.dy;
+                    setState(() {
+                      _dragShown = _dragRaw.clamp(
+                        -kSileoSwipeMax,
+                        kSileoSwipeMax,
+                      );
+                    });
+                  }
+                : null,
+            onVerticalDragEnd: canSwipe
+                ? (_) {
+                    final dismiss = _dragRaw.abs() > kSileoSwipeDismiss;
+                    _dragRaw = 0;
+                    setState(() => _dragShown = 0);
+                    if (dismiss) widget.onDismiss?.call();
+                  }
+                : null,
+            child: AnimatedBuilder(
+              animation: Listenable.merge(<Listenable>[
+                _pillWidth,
+                _bodyHeight,
+                _bodyOpacity,
+                _pillBump,
+                _entryCurve,
+              ]),
+              builder: (context, _) => _buildBody(),
+            ),
           ),
-          builder: (context, _) => _buildBody(),
         ),
-      ),
-      ),
       ),
     );
   }
@@ -605,8 +629,10 @@ class _SileoToastState extends State<SileoToast>
     final headerNudge = (widget.expandUp ? -3.0 : 3.0) * t;
 
     final layers = AnimatedBuilder(
-      animation:
-          Listenable.merge(<Listenable>[_headerEnterCurve, _headerExitCurve]),
+      animation: Listenable.merge(<Listenable>[
+        _headerEnterCurve,
+        _headerExitCurve,
+      ]),
       builder: (context, _) {
         final enter = _headerEnterCurve.value.clamp(0.0, 1.0);
         final exit = _headerExitCurve.value.clamp(0.0, 1.0);
@@ -639,7 +665,8 @@ class _SileoToastState extends State<SileoToast>
 
     return Positioned(
       left: pillX,
-      width: pillW, // clip the header to the pill (a longer outgoing title is cropped)
+      width: pillW,
+      // clip the header to the pill (a longer outgoing title is cropped)
       top: widget.expandUp ? null : 0,
       bottom: widget.expandUp ? 0 : null,
       height: kSileoHeight,
@@ -654,7 +681,9 @@ class _SileoToastState extends State<SileoToast>
           minHeight: 0,
           maxHeight: kSileoHeight,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kSileoHeaderPadding),
+            padding: const EdgeInsets.symmetric(
+              horizontal: kSileoHeaderPadding,
+            ),
             child: Transform.translate(
               offset: Offset(0, headerNudge),
               child: Transform.scale(scale: headerScale, child: layers),
@@ -676,8 +705,9 @@ class _SileoToastState extends State<SileoToast>
         height: bodyH,
         child: ClipRect(
           child: OverflowBox(
-            alignment:
-                widget.expandUp ? Alignment.bottomCenter : Alignment.topCenter,
+            alignment: widget.expandUp
+                ? Alignment.bottomCenter
+                : Alignment.topCenter,
             minHeight: 0,
             maxHeight: double.infinity,
             child: Opacity(opacity: bodyO, child: _contentChild()),

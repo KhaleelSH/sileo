@@ -50,22 +50,22 @@ class SileoItem {
   final bool exiting;
 
   SileoItem copyWith({bool? exiting}) => SileoItem(
-        id: id,
-        instanceId: instanceId,
-        state: state,
-        position: position,
-        roundness: roundness,
-        title: title,
-        description: description,
-        icon: icon,
-        fill: fill,
-        button: button,
-        styles: styles,
-        duration: duration,
-        autoExpandDelay: autoExpandDelay,
-        autoCollapseDelay: autoCollapseDelay,
-        exiting: exiting ?? this.exiting,
-      );
+    id: id,
+    instanceId: instanceId,
+    state: state,
+    position: position,
+    roundness: roundness,
+    title: title,
+    description: description,
+    icon: icon,
+    fill: fill,
+    button: button,
+    styles: styles,
+    duration: duration,
+    autoExpandDelay: autoExpandDelay,
+    autoCollapseDelay: autoCollapseDelay,
+    exiting: exiting ?? this.exiting,
+  );
 }
 
 /// The global toast store — a [ChangeNotifier] singleton holding all live
@@ -86,6 +86,7 @@ class SileoStore extends ChangeNotifier {
   SileoOptions? defaultOptions;
 
   int _counter = 0;
+
   String _nextInstance() => 'sileo-i${++_counter}';
 
   /// A fresh unique toast id (used by `future` so concurrent futures don't
@@ -304,15 +305,17 @@ class SileoController {
       persist: true,
     );
 
-    future.then((T value) {
-      if (options.action != null) {
-        _store.update(id, options.action!(value), SileoState.action);
-      } else {
-        _store.update(id, options.success(value), SileoState.success);
-      }
-    }).catchError((Object e) {
-      _store.update(id, options.error(e), SileoState.error);
-    });
+    future
+        .then((T value) {
+          if (options.action != null) {
+            _store.update(id, options.action!(value), SileoState.action);
+          } else {
+            _store.update(id, options.success(value), SileoState.success);
+          }
+        })
+        .catchError((Object e) {
+          _store.update(id, options.error(e), SileoState.error);
+        });
 
     return future;
   }

@@ -7,7 +7,7 @@
     <a href="https://github.com/KhaleelSH/sileo/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
   </p>
 
-  <img src="doc/preview.png" alt="A Sileo toast morphing open from a pill into a gooey body" width="720">
+  <img src="https://raw.githubusercontent.com/KhaleelSH/sileo/main/doc/preview.png" alt="A Sileo toast morphing open from a pill into a gooey body" width="720">
 
   <p><b><a href="https://khaleelsh.github.io/sileo/">▶ Try the live web demo</a></b></p>
 </div>
