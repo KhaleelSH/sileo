@@ -29,6 +29,7 @@ class SileoToast extends StatefulWidget {
     required this.alignFactor,
     required this.expandUp,
     required this.canExpand,
+    required this.width,
     this.title,
     this.description,
     this.icon,
@@ -56,6 +57,9 @@ class SileoToast extends StatefulWidget {
 
   /// Active-toast gating — only the active toast may expand.
   final bool canExpand;
+
+  /// Canvas width (responsive: shrinks on narrow screens).
+  final double width;
 
   final String? title;
   final String? description;
@@ -190,6 +194,7 @@ class _SileoToastState extends State<SileoToast> with TickerProviderStateMixin {
     _reduceMotion = mq?.disableAnimations ?? false;
     _textScaler = mq?.textScaler ?? TextScaler.noScaling;
     _textDirection = Directionality.maybeOf(context) ?? TextDirection.ltr;
+
     // Measure the pill synchronously (TextPainter needs no layout pass). The
     // first measurement snaps; later ones spring (mirrors `ready ? SPRING : 0`).
     _measurePill(snap: !_ready);
@@ -569,7 +574,8 @@ class _SileoToastState extends State<SileoToast> with TickerProviderStateMixin {
     final bodyH = math.max(0.0, _bodyHeight.value);
     final bodyO = _bodyOpacity.value.clamp(0.0, 1.0);
     final total = kSileoHeight + bodyH;
-    final pillX = (kSileoWidth - pillW) * widget.alignFactor;
+
+    final pillX = (widget.width - pillW) * widget.alignFactor;
     final pillHeight = kSileoHeight + math.max(0.0, _pillBump.value);
 
     final e = _entryCurve.value;
@@ -578,10 +584,10 @@ class _SileoToastState extends State<SileoToast> with TickerProviderStateMixin {
 
     final paper = RepaintBoundary(
       child: CustomPaint(
-        size: Size(kSileoWidth, total),
+        size: Size(widget.width, total),
         painter: SileoGooeyPainter(
           pill: Rect.fromLTWH(pillX, 0, pillW, pillHeight),
-          body: Rect.fromLTWH(0, kSileoHeight, kSileoWidth, bodyH),
+          body: Rect.fromLTWH(0, kSileoHeight, widget.width, bodyH),
           radius: widget.roundness,
           blur: _blur,
           fill: _vFill,
@@ -596,7 +602,7 @@ class _SileoToastState extends State<SileoToast> with TickerProviderStateMixin {
         child: Transform.scale(
           scale: ui.lerpDouble(0.95, 1.0, e)!,
           child: SizedBox(
-            width: kSileoWidth,
+            width: widget.width,
             height: total,
             child: Stack(
               clipBehavior: Clip.none,
@@ -610,8 +616,8 @@ class _SileoToastState extends State<SileoToast> with TickerProviderStateMixin {
                         )
                       : paper,
                 ),
-                if (_hasDesc) _buildContent(bodyH, bodyO),
-                _buildHeader(pillX, pillW, bodyO),
+                if (_hasDesc) _buildContent(bodyH, bodyO, widget.width),
+                _buildHeader(pillX, pillW, bodyO, widget.width),
               ],
             ),
           ),
@@ -620,7 +626,7 @@ class _SileoToastState extends State<SileoToast> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildHeader(double pillX, double pillW, double openT) {
+  Widget _buildHeader(double pillX, double pillW, double openT, double width) {
     // As the toast opens, the header tucks toward the body (scale 0.9, nudge
     // 3px toward the expand edge). The cross-fade layers sit below this scale,
     // and the box is sized only by the current layer, so the pivot stays put.
@@ -694,14 +700,14 @@ class _SileoToastState extends State<SileoToast> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildContent(double bodyH, double bodyO) {
+  Widget _buildContent(double bodyH, double bodyO, double width) {
     return Positioned(
       left: 0,
-      width: kSileoWidth,
+      width: width,
       top: widget.expandUp ? null : kSileoHeight,
       bottom: widget.expandUp ? kSileoHeight : null,
       child: SizedBox(
-        width: kSileoWidth,
+        width: width,
         height: bodyH,
         child: ClipRect(
           child: OverflowBox(

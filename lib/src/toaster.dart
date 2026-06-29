@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
 
 import 'colors.dart';
+import 'constants.dart';
 import 'options.dart';
 import 'sileo_toast.dart';
 import 'store.dart';
@@ -218,6 +220,10 @@ class _ToasterState extends State<Toaster> {
     final ordered = pos.isTop ? items.reversed.toList() : items;
     final offset = widget.offset ?? EdgeInsets.zero;
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final totalHPadding = _kViewportPadding * 2 + offset.left + offset.right;
+    final availableWidth = math.max(0.0, screenWidth - totalHPadding);
+
     final content = Align(
       alignment: _alignmentFor(pos),
       child: Padding(
@@ -232,7 +238,8 @@ class _ToasterState extends State<Toaster> {
           crossAxisAlignment: CrossAxisAlignment.center,
           spacing: 12,
           children: <Widget>[
-            for (final item in ordered) _buildToast(item, themeFill),
+            for (final item in ordered)
+              _buildToast(item, themeFill, availableWidth),
           ],
         ),
       ),
@@ -244,7 +251,7 @@ class _ToasterState extends State<Toaster> {
     );
   }
 
-  Widget _buildToast(SileoItem item, Color? themeFill) {
+  Widget _buildToast(SileoItem item, Color? themeFill, double availableWidth) {
     final pos = item.position;
     return SileoToast(
       // Keyed by id + position so the widget persists across in-place updates
@@ -265,6 +272,7 @@ class _ToasterState extends State<Toaster> {
       button: item.button,
       styles: item.styles,
       exiting: item.exiting,
+      width: math.min(kSileoWidth, availableWidth),
       autoExpandDelay: item.autoExpandDelay,
       autoCollapseDelay: item.autoCollapseDelay,
       onMouseEnter: () => _onHoverEnter(item.id),
