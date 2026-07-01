@@ -570,7 +570,13 @@ class _SileoToastState extends State<SileoToast> with TickerProviderStateMixin {
   }
 
   Widget _buildBody() {
-    final pillW = math.max(_pillWidth.value, kSileoHeight);
+    // Clamp the (title-driven) pill to the canvas so a long title on a narrow
+    // screen is cropped by the header's ClipRect instead of overflowing — this
+    // also keeps pillX (below) >= 0.
+    final pillW = math.min(
+      math.max(_pillWidth.value, kSileoHeight),
+      widget.width,
+    );
     final bodyH = math.max(0.0, _bodyHeight.value);
     final bodyO = _bodyOpacity.value.clamp(0.0, 1.0);
     final total = kSileoHeight + bodyH;
@@ -616,8 +622,8 @@ class _SileoToastState extends State<SileoToast> with TickerProviderStateMixin {
                         )
                       : paper,
                 ),
-                if (_hasDesc) _buildContent(bodyH, bodyO, widget.width),
-                _buildHeader(pillX, pillW, bodyO, widget.width),
+                if (_hasDesc) _buildContent(bodyH, bodyO),
+                _buildHeader(pillX, pillW, bodyO),
               ],
             ),
           ),
@@ -626,7 +632,7 @@ class _SileoToastState extends State<SileoToast> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildHeader(double pillX, double pillW, double openT, double width) {
+  Widget _buildHeader(double pillX, double pillW, double openT) {
     // As the toast opens, the header tucks toward the body (scale 0.9, nudge
     // 3px toward the expand edge). The cross-fade layers sit below this scale,
     // and the box is sized only by the current layer, so the pivot stays put.
@@ -700,14 +706,14 @@ class _SileoToastState extends State<SileoToast> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildContent(double bodyH, double bodyO, double width) {
+  Widget _buildContent(double bodyH, double bodyO) {
     return Positioned(
       left: 0,
-      width: width,
+      width: widget.width,
       top: widget.expandUp ? null : kSileoHeight,
       bottom: widget.expandUp ? kSileoHeight : null,
       child: SizedBox(
-        width: width,
+        width: widget.width,
         height: bodyH,
         child: ClipRect(
           child: OverflowBox(
