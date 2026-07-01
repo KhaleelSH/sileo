@@ -108,8 +108,9 @@ class _ToasterState extends State<Toaster> {
       if (!t.exiting) latest = t.id;
     }
     _latestId = latest;
-    // The newest toast becomes active on every change; a hover-enter then
-    // overrides it (see _onHoverEnter), and hover-leave restores it.
+    // The newest toast becomes active on every change; a hover-enter or a tap
+    // (see _onHoverEnter / _onTapped) then overrides it, and hover-leave
+    // restores it.
     _activeId = latest;
   }
 
@@ -151,6 +152,8 @@ class _ToasterState extends State<Toaster> {
 
   /* -------------------------------- Hover -------------------------------- */
 
+  /// Hover-enter: make this the active toast and pause every auto-dismiss timer
+  /// so nothing disappears while the pointer rests on the stack.
   void _onHoverEnter(String id) {
     setState(() => _activeId = id);
     if (!_hover) {
@@ -159,11 +162,34 @@ class _ToasterState extends State<Toaster> {
     }
   }
 
+  /// Hover-leave: restore the newest toast as active and resume the timers.
   void _onHoverLeave() {
     setState(() => _activeId = _latestId);
     if (_hover) {
       _hover = false;
       _schedule();
+    }
+  }
+
+  /* --------------------------------- Tap --------------------------------- */
+
+  /// Tap-to-open. Unlike a hover, a tap never *pauses* auto-dismiss — there is
+  /// no "leave" event to un-pause it. It makes the toast active and simply
+  /// restarts its own dismiss countdown, so the toast still hides itself after
+  /// a fresh window (the toast restarts its collapse countdown in parallel).
+  void _onTapped(String id) {
+    setState(() => _activeId = id);
+    if (_hover) return; // a hover is holding the timers; don't fight it
+    for (final t in _toasts) {
+      if (t.id == id && !t.exiting) {
+        final key = _timerKey(t);
+        _timers.remove(key)?.cancel();
+        final d = t.duration;
+        if (d != null && d > Duration.zero) {
+          _timers[key] = Timer(d, () => _store.dismiss(t.id));
+        }
+        return;
+      }
     }
   }
 
@@ -277,6 +303,7 @@ class _ToasterState extends State<Toaster> {
       autoCollapseDelay: item.autoCollapseDelay,
       onMouseEnter: () => _onHoverEnter(item.id),
       onMouseLeave: _onHoverLeave,
+      onTapped: () => _onTapped(item.id),
       onDismiss: () => _store.dismiss(item.id),
     );
   }
